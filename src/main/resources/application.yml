@@ -1,0 +1,9 @@
+server:
+  port: 9632
+spring:
+  application:
+    name: spring-webflux-reactive
+  r2dbc:
+    url: r2dbc:mysql://localhost/webflux-reactive?autoReconnect=true
+    username: config
+    password: config
