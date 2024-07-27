@@ -10,4 +10,8 @@ public interface UserService {
     Mono<User> getUserById(Long id);
 
     Flux<User> getUsersByName(String name);
+
+    Mono<User> registerUser(User user);
+
+    Mono<User> retrieveUserByName(String name);
 }

@@ -4,6 +4,18 @@ spring:
   application:
     name: spring-webflux-reactive
   r2dbc:
-    url: r2dbc:mysql://localhost/webflux-reactive?autoReconnect=true
-    username: config
-    password: config
+    #url: r2dbc:mysql://localhost/webflux-reactive?autoReconnect=true
+    #username: config
+    #password: config
+    url: r2dbc:postgresql://localhost:5432/webflux-reactive
+    username: postgres
+    password: YassMel97
+  data:
+    r2dbc:
+      repositories:
+        enabled: true
+logging:
+  level:
+    org.springframework.r2dbc: DEBUG
+    io.r2dbc.postgresql: DEBUG
+    org.springframework.data.r2dbc: DEBUG
