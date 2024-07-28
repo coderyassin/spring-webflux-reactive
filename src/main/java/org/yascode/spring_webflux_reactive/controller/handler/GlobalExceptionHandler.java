@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ServerWebExchange;
 import org.yascode.spring_webflux_reactive.controller.response.ErrorMessage;
+import org.yascode.spring_webflux_reactive.exception.MultipleResourcesFoundException;
 import org.yascode.spring_webflux_reactive.exception.ResourceNotFoundException;
 import reactor.core.publisher.Mono;
 
@@ -16,7 +17,8 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = {ResourceNotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public Mono<ResponseEntity<ErrorMessage>> resourceNotFoundException(ResourceNotFoundException ex, ServerWebExchange serverWebExchange) {
+    public Mono<ResponseEntity<ErrorMessage>> resourceNotFoundException(ResourceNotFoundException ex,
+                                                                        ServerWebExchange serverWebExchange) {
 
         ErrorMessage errorMessage = ErrorMessage.builder()
                 .status(HttpStatus.NOT_FOUND.value())
@@ -26,6 +28,20 @@ public class GlobalExceptionHandler {
                 .build();
 
         return Mono.justOrEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(errorMessage));
+    }
+
+    @ExceptionHandler(value = {MultipleResourcesFoundException.class})
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public Mono<ResponseEntity<ErrorMessage>> multipleResourcesFoundException(MultipleResourcesFoundException ex,
+                                                                              ServerWebExchange serverWebExchange) {
+        ErrorMessage errorMessage = ErrorMessage.builder()
+                .timestamp(LocalDateTime.now())
+                .message(ex.getMessage())
+                .path(serverWebExchange.getRequest().getPath().value())
+                .build();
+
+        return Mono.justOrEmpty(ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(errorMessage));
     }
 }

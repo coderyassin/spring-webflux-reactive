@@ -3,14 +3,14 @@ package org.yascode.spring_webflux_reactive.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
 import org.yascode.spring_webflux_reactive.entity.User;
-import org.yascode.spring_webflux_reactive.exception.ResourceNotFoundException;
 import org.yascode.spring_webflux_reactive.service.UserService;
-import reactor.core.publisher.Flux;
+import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @RequestMapping("/users")
@@ -36,12 +36,13 @@ public class UserController {
 
     @GetMapping(value = "/byName/{name}")
     ResponseEntity<?> retrieveUserByName(@PathVariable(name = "name") String name, ServerWebExchange serverWebExchange) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(userService.retrieveUserByName(name));
-        } catch (ResourceNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.retrieveUserByName(name));
+    }
+
+    @GetMapping(value = "/byNameV2/{name}")
+    Mono<ResponseEntity<?>> retrieveUserByNameV2(@PathVariable(name = "name") String name, ServerWebExchange serverWebExchange) {
+        return userService.retrieveUserByNameV2(name);
     }
 
     @PostMapping
