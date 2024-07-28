@@ -5,6 +5,8 @@ import org.yascode.spring_webflux_reactive.entity.User;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 public interface UserService {
     Flux<User> getAllUsers();
 
@@ -17,4 +19,6 @@ public interface UserService {
     Mono<User> retrieveUserByName(String name);
 
     Mono<ResponseEntity<?>> retrieveUserByNameV2(String name);
+
+    Flux<User> deleteDuplicates(String name);
 }

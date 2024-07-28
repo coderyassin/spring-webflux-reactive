@@ -7,10 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
 import org.yascode.spring_webflux_reactive.entity.User;
 import org.yascode.spring_webflux_reactive.service.UserService;
-import reactor.core.Disposable;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @RequestMapping("/users")
@@ -26,6 +24,11 @@ public class UserController {
     public ResponseEntity<?> getAllUsers() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getAllUsers());
+    }
+
+    @GetMapping("/flux")
+    public Flux<User> getUsers() {
+        return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
@@ -49,5 +52,10 @@ public class UserController {
     ResponseEntity<?> registerUser(@RequestBody User user) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.registerUser(user));
+    }
+
+    @GetMapping(value = "/deleteDuplicates/{name}")
+    public Flux<User> deleteDuplicates(@PathVariable("name") String name) {
+        return userService.deleteDuplicates(name);
     }
 }

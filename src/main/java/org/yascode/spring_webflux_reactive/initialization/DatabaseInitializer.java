@@ -21,8 +21,7 @@ public class DatabaseInitializer {
             .flatMap(user -> userRepository.save(user))
             .doOnComplete(() -> log.info("Database initialization completed"))
             .doOnError(e -> log.error("Database initialization failed", e))
-            .subscribe()
-            .dispose();
+            .subscribe();
     }
 
     private User createUser() {

@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Flux<User> getAllUsers() {
         return userRepository.findAll()
-                .filter(user -> nameInList(validNames, user.getName()))
+                //.filter(user -> nameInList(validNames, user.getName()))
                 .map(user -> {
                     user.setName("__" + user.getName());
                     return user;
@@ -87,8 +87,14 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
+    @Override
     public Mono<ResponseEntity<?>> retrieveUserByNameV2(String name) {
         return userClientApi.retrieveUserByNameV2(name);
+    }
+
+    @Override
+    public Flux<User> deleteDuplicates(String name) {
+        return userClientApi.deleteDuplicates(name);
     }
 
     private boolean nameInList(List<String> validNames, String name) {
